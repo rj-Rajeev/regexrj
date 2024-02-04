@@ -27,8 +27,10 @@ async function convertKaTeXToMarkdown() {
   }
 
   const tableContent = await katexTable
+    .replace(/\\multirow{.*}/, "")
+    .replace(/\\multicolumn{.*}/, "")
     .replace(/\\begin{tabular}{.*}/, "")
-    .replace(/\\end{tabular}/, "")
+    .replace(/\\end{tabular}{.*}/, "")
     .replace(/\\hline/g, "")
     .replace(/&/g, "|");
 
@@ -38,7 +40,7 @@ async function convertKaTeXToMarkdown() {
   const finalRows = await filterdRows.map((item) => item.replace(/\n/g, ""));
   const tableFinalRows = finalRows.splice(1, 0, tableMaker);
   const finalMdTable = await finalRows.join("\n");
-  console.log(tableFinalRows);
+  // console.log(tableFinalRows);
   outputDiv.value = finalMdTable;
   // return finalMdTable;
 }
