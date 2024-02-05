@@ -34,7 +34,7 @@ async function convertKaTeXToMarkdown() {
     .replace(/\\hline/g, "")
     .replace(/&/g, "|");
 
-  const tableRows = await tableContent.split("\\\\\\");
+  const tableRows = await tableContent.split("\\\\");
   const filterdRows = await tableRows.filter((item) => item.includes("|"));
   const tableMaker = generateLineWithBars(filterdRows[0].match(/\|/g).length);
   const finalRows = await filterdRows.map((item) => item.replace(/\n/g, ""));
