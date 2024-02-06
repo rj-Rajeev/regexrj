@@ -2,16 +2,12 @@ function addPeriods() {
   const inputText = document.getElementById("inputText").value;
   const outputDiv = document.getElementById("output");
 
-  // Use regular expression to match number followed by a space
   const pattern = /^\d+\s+/gm;
 
-  // /(\d+)\s/g;
-  // Replace number followed by a space with the same number followed by a period
   const updatedText = inputText.replace(pattern, (match) =>
     match.replace(/\s+/gm, ". ")
   );
 
-  // Display the updated text
   outputDiv.value = updatedText;
 }
 
@@ -27,10 +23,10 @@ async function convertKaTeXToMarkdown() {
   }
 
   const tableContent = await katexTable
-    .replace(/\\multirow{.*}/, "")
-    .replace(/\\multicolumn{.*}/, "")
-    .replace(/\\begin{tabular}{.*}/, "")
-    .replace(/\\end{tabular}{.*}/, "")
+    .replace(/\\multirow/g, "")
+    .replace(/\\multicolumn/g, "")
+    .replace(/\\begin{tabular}/g, "")
+    .replace(/\\end{tabular}/g, "")
     .replace(/\\hline/g, "")
     .replace(/&/g, "|");
 
@@ -43,4 +39,37 @@ async function convertKaTeXToMarkdown() {
   // console.log(tableFinalRows);
   outputDiv.value = finalMdTable;
   // return finalMdTable;
+}
+
+
+function createMdTable() {
+  const tableData = document.getElementById("inputText").value;
+  const outputDiv = document.getElementById("output");
+
+  const lists = tableData.split("~~");
+
+  const nonEmptyLists = lists.filter((list) => list.trim() !== "");
+
+  const columns = nonEmptyLists.map((column) =>
+    column.split(/\n|\r\n/).filter((item) => item.trim() !== "")
+  );
+
+  let markdownTable = "";
+
+  if (columns.length > 1) {
+    markdownTable = `| ${Array(columns.length)
+      .fill("-")
+      .join(" | ")} |\n|${Array(columns.length).fill("---").join("|")}|`;
+  }
+
+  console.log(markdownTable);
+  let createTable = () => {
+    for (let i = 0; i < Math.max(...columns.map((col) => col.length)); i++) {
+      markdownTable += `\n| ${columns
+        .map((col) => col[i] || "")
+        .join(" | ")} |`;
+    }
+  };
+  createTable();
+  outputDiv.value = markdownTable;
 }
