@@ -25,12 +25,12 @@ async function convertKaTeXToMarkdown() {
   const tableContent = await katexTable
     .replace(/\\multirow/g, "")
     .replace(/\\multicolumn/g, "")
-    .replace(/\\begin{tabular}/g, "")
+    .replace(/\\begin{tabular}{.*}/g, "")
     .replace(/\\end{tabular}/g, "")
     .replace(/\\hline/g, "")
     .replace(/&/g, "|");
 
-  const tableRows = await tableContent.split("\\\\");
+  const tableRows = await tableContent.split("\\\\\\");
   const filterdRows = await tableRows.filter((item) => item.includes("|"));
   const tableMaker = generateLineWithBars(filterdRows[0].match(/\|/g).length);
   const finalRows = await filterdRows.map((item) => item.replace(/\n/g, ""));
@@ -40,7 +40,6 @@ async function convertKaTeXToMarkdown() {
   outputDiv.value = finalMdTable;
   // return finalMdTable;
 }
-
 
 function createMdTable() {
   const tableData = document.getElementById("inputText").value;
